@@ -136,7 +136,7 @@ def send_encrypted_challenge():
 
 # Main Transmitter loop
 while True:
-    if authenticate_rfid():  # Wait for RFID authentication
+    if authenticate_rfid() == 1:  # Wait for RFID authentication
         send_encrypted_challenge()  # Send encrypted challenge to receiver
     elif authenticate_rfid() == -1:
         """Run Delete"""
