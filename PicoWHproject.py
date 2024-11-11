@@ -119,10 +119,10 @@ def authenticate_rfid():
         if status == rfid_reader.OK: # User Auth - NJ
             print("RFID UID:", uid)
             for i in range(0,4): # Get 4 diffrent inputs from dip switch
-                pin = read_dip_switch
+                pin = read_dip_switch()
                 user_pin += pin
             currentUseID = str(uid) + str(user_pin)
-            print("ENCRYPTED IDCHECK: " encrypt_data(currentUseID)) # This is only needed for us to get the id to hard code- NJ
+            print("ENCRYPTED ID: " encrypt_data(currentUseID)) # This is only needed for us to get the id to hard code- NJ
             if encrypt_data(currentUseID) == idCheck: #Check entered data against the stored data
                 return 1 # send auth User cmd - NJ
             return -1 # send delete cmd - NJ 
