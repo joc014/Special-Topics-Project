@@ -125,7 +125,9 @@ def authenticate_rfid():
             print("ENCRYPTED ID: " encrypt_data(currentUseID)) # This is only needed for us to get the id to hard code- NJ
             if encrypt_data(currentUseID) == idCheck: #Check entered data against the stored data
                 return 1 # send auth User cmd - NJ
-            return -1 # send delete cmd - NJ 
+            elif encrypt_data(currentUseID) not idCheck:
+                """ Send un Auth accesss """"
+                return -1 # send delete cmd - NJ 
     return 0
 
 # Transmitter to send encrypted challenge
