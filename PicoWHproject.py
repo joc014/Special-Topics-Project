@@ -4,6 +4,8 @@ import ucryptolib
 import urandom
 from nrf24l01 import NRF24L01
 
+idCheck = ""
+
 # Setup for RFID reader (RC522)
 spi = SPI(0, baudrate=1000000, polarity=0, phase=0, sck=Pin(18), mosi=Pin(19), miso=Pin(16))
 rfid_reader = MFRC522(spi, Pin(22))
@@ -114,10 +116,17 @@ def authenticate_rfid():
     if status == rfid_reader.OK:
         print("RFID card detected")
         (status, uid) = rfid_reader.SelectTagSN()
-        if status == rfid_reader.OK:
+        if status == rfid_reader.OK: # User Auth - NJ
             print("RFID UID:", uid)
-            return True
-    return False
+            for i in range(0,4): # Get 4 diffrent inputs from dip switch
+                pin = read_dip_switch
+                user_pin += pin
+            currentUseID = str(uid) + str(user_pin)
+            print("ENCRYPTED IDCHECK: " encrypt_data(currentUseID)) # This is only needed for us to get the id to hard code- NJ
+            if encrypt_data(currentUseID) == idCheck: #Check entered data against the stored data
+                return 1 # send auth User cmd - NJ
+            return -1 # send delete cmd - NJ 
+    return 0
 
 # Transmitter to send encrypted challenge
 def send_encrypted_challenge():
@@ -128,6 +137,6 @@ def send_encrypted_challenge():
 # Main Transmitter loop
 while True:
     if authenticate_rfid():  # Wait for RFID authentication
-        user_pin = read_dip_switch()  # Read 4-hex digit PIN
-        print("User PIN:", user_pin)
         send_encrypted_challenge()  # Send encrypted challenge to receiver
+    elif authenticate_rfid() == -1:
+        """Run Delete"""
