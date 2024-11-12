@@ -111,14 +111,14 @@ def self_destruct():
     # Additional cleanup actions here
 
 # Main Receiver loop
-while True:
-    if nrf.any():
-        encrypted_data = nrf.recv()
-        decrypted_data = decrypt_data(encrypted_data)
-        print("Decrypted data:", decrypted_data)
+#while True:
+#    if nrf.any():
+#        encrypted_data = nrf.recv()
+#        decrypted_data = decrypt_data(encrypted_data)
+#        print("Decrypted data:", decrypted_data)
         
         # Example logic for self-destruct (if unauthorized access detected)
-        if decrypted_data == b"Unauthorized":
-            self_destruct()
+#        if decrypted_data == b"Unauthorized":
+#            self_destruct()
         
-        control_servo(decrypted_data)  # Use decrypted data for servo control
+#        control_servo(decrypted_data)  # Use decrypted data for servo control
