@@ -137,8 +137,8 @@ def send_encrypted_challenge():
     nrf.send(encrypted_challenge)
 
 # Main Transmitter loop
-while True:
-    if authenticate_rfid() == 1:  # Wait for RFID authentication
-        send_encrypted_challenge()  # Send encrypted challenge to receiver
-    elif authenticate_rfid() == -1:
-        """Run Delete"""
+#while True:
+#    if authenticate_rfid() == 1:  # Wait for RFID authentication
+#        send_encrypted_challenge()  # Send encrypted challenge to receiver
+#    elif authenticate_rfid() == -1:
+#        """Run Delete"""
