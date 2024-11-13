@@ -1,0 +1,23 @@
+Yellow Button = PIN 9 GP 12
+Red Button = PIN 11 GP 8
+Green Button = PIN 12 GP 9
+
+LED 1 = PIN 14 GP 10
+LED 2 = PIN 15 GP 11
+LED 3 = PIN 16 GP 12
+LED 5 = PIN 17 GP 13
+
+DIP SWITCH
+LSB 1 = PIN 25 GP 19
+2 = PIN 26 GP 20
+3 = PIN 27 GP 21
+MSB 4 = PIN 29 GP 22
+
+RFID Reader
+SDA = PIN 7
+SCK = PIN 4
+MOSI = PIN 10
+MISO = PIN 6
+GND = Ground
+RST = PIN 24
+3.3V = 3.3 vOUt
