@@ -46,6 +46,12 @@ current_user_creds = b""
 # Setup DIP Switch (for 4-hex digit user PIN input)
 dip_switch_pins = [Pin(i, Pin.IN) for i in (19, 20, 21, 22)] # Updated - NJ
 
+led1 = Pin(10, Pin.OUT)
+led2 = Pin(11, Pin.OUT)
+led3 = Pin(12, Pin.OUT)
+led4 = Pin(13, Pin.OUT)
+leds = [led1, led2, led3, led4]
+
 button1 = Pin(9, Pin.IN, pull=Pin.PULL_DOWN) # Green Button NJ
 
 # Encrypt data with CBC mode
@@ -157,20 +163,26 @@ def read_rfid_data():
     (status, tag_type) = rfid_reader.request(rfid_reader.REQIDL)
     if status == rfid_reader.OK:
         print("Card detected")
-
         # Select the card
         (status, uid) = rfid_reader.SelectTagSN()
         if status == rfid_reader.OK:
             # Convert the UID to a string (hexadecimal format)
             uid_str = ''.join([f'{byte:02X}' for byte in uid])  # Format each byte as a 2-digit uppercase hex string
 #             print("Card UID:", uid_str)
+            
             i=0
+            current_led = 0
             while i<4 :
                 if button1.value() == 1:
                     i+=1
                     pinholder.append(read_dip_switch())
                     print("PIN HOLDER: ", pinholder)
-                    time.sleep(0.5) 
+                    time.sleep(0.5)
+                    
+                    leds[current_led].value(1)  # Turn on the current LED
+                    
+                    # Move to the next LED in the sequence
+                    current_led = (current_led + 1) % len(leds)
                     
             combined_string = ''.join(pinholder) #F683
             pin_hex = binary_to_hex(combined_string)  # Convert binary string to hex
@@ -179,9 +191,8 @@ def read_rfid_data():
 #             pin = 1111011010000011 
 #             pin_str = str(pin)  # Convert the number to a string
 #             pin_hex = binary_to_hex(pin_str)
-            
 #             print(f"PIN in Hex: {pin_hex}")
-
+            
             current_user_creds = (uid_str + pin_hex).encode()  # Convert to bytes
             enc_ID = encrypt_data(current_user_creds)
             
@@ -191,6 +202,7 @@ def read_rfid_data():
             if enc_ID == idCheck:
                 # Stop authentication after reading
                 rfid_reader.stop_crypto1()
+                
                 return 1
             else:
                 print("Authentication failed")
@@ -202,9 +214,11 @@ def read_rfid_data():
 #         print("No card detected")
         return 0
 
-
-
-
+def ledsOff():
+    time.sleep(0.5)
+    for led in leds:
+        led.value(0)
+        
 # Setup RFID reader (RC522)
 rfid_reader = MFRC522(spi_id=0, sck=2, mosi=7, miso=4, cs=5, rst=18)
 
@@ -214,7 +228,6 @@ while not stop:
     if role == "send":
         state = read_rfid_data()
         if state == idCheck:
-            
             print("Yay")
         else:
             print("Bad Guy")
